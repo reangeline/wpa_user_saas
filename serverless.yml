@@ -1,0 +1,53 @@
+service: sns-lambda-service-wpa
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    SNS_TOPIC_ARN: arn:aws:sns:us-east-1:237071355172:GoWpaUser
+    DYNAMODB_TABLE: usersTable
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:237071355172:table/usersTable"
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource: "arn:aws:sns:us-east-1:237071355172:GoWpaUser"
+
+functions:
+  snsConsumer:
+    handler: bootstrap
+    package:
+      artifact: consumer.zip
+    events:
+      - sns:
+          arn: arn:aws:sns:us-east-1:237071355172:GoWpaUser
+          topicName: GoWpaUser
+  api:
+    handler: bootstrap
+    package:
+      artifact: main.zip
+    events: 
+      - http:
+          path: /users
+          method: GET
+      - http:
+          path: /users
+          method: POST
+      - http:
+          path: /health
+          method: GET
+
+package:
+  individually: true
