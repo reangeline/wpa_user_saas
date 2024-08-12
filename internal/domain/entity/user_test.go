@@ -9,16 +9,14 @@ import (
 
 func TestNewUser(t *testing.T) {
 	name := "John"
-	lastName := "Doe"
 	email := "john.doe@example.com"
 	phone := "1234567890"
 
-	user, err := entity.NewUser(name, lastName, email, phone)
+	user, err := entity.NewUser(name, email, phone)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
 	assert.Equal(t, name, user.Name)
-	assert.Equal(t, lastName, user.LastName)
 	assert.Equal(t, email, user.Email)
 	assert.NotEmpty(t, user.ID)
 

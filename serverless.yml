@@ -1,14 +1,13 @@
-service: sns-lambda-service-wpa
+service: wpa-user-saas
 
 frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: go1.x
+  runtime: provided.al2
   region: us-east-1
   stage: ${opt:stage, 'dev'}
   environment:
-    SNS_TOPIC_ARN: arn:aws:sns:us-east-1:237071355172:GoWpaUser
     DYNAMODB_TABLE: usersTable
   iamRoleStatements:
     - Effect: Allow
@@ -20,34 +19,27 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:us-east-1:237071355172:table/usersTable"
-    - Effect: Allow
-      Action:
-        - sns:Publish
-      Resource: "arn:aws:sns:us-east-1:237071355172:GoWpaUser"
 
 functions:
-  snsConsumer:
-    handler: bootstrap
-    package:
-      artifact: consumer.zip
+  getUser:
+    handler: bin/bootstrap
     events:
-      - sns:
-          arn: arn:aws:sns:us-east-1:237071355172:GoWpaUser
-          topicName: GoWpaUser
-  api:
-    handler: bootstrap
-    package:
-      artifact: main.zip
-    events: 
       - http:
-          path: /users
-          method: GET
-      - http:
-          path: /users
-          method: POST
-      - http:
-          path: /health
+          path: /user/{phone}
           method: GET
 
+  createUser:
+    handler: bin/bootstrap
+    events:
+      - http:
+          path: /user
+          method: POST
+
+
+plugins:
+  - serverless-step-functions
+
 package:
-  individually: true
+  patterns:
+    - '!./**'
+    - ./bin/**

@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	mock "github.com/reangeline/wpa_user_saas/internal/domain/contract/repository/mock"
 	"github.com/reangeline/wpa_user_saas/internal/domain/entity"
 	"github.com/reangeline/wpa_user_saas/internal/dto"
+	mock "github.com/reangeline/wpa_user_saas/internal/infra/database/repository/mock"
 	pkg "github.com/reangeline/wpa_user_saas/pkg/entity"
 	"github.com/stretchr/testify/assert"
 )
@@ -25,10 +25,9 @@ func TestCreateUserUseCase_Execute(t *testing.T) {
 		mockRepo.EXPECT().GetUserByEmail(gomock.Any(), gomock.Any()).Return(nil, nil)
 
 		input := &dto.UserInput{
-			Name:     "John",
-			LastName: "Doe",
-			Email:    "john.doe@example.com",
-			Phone:    "1234567890",
+			Name:        "John",
+			Email:       "john.doe@example.com",
+			PhoneNumber: "1234567890",
 		}
 
 		err := useCase.Execute(context.Background(), input)
@@ -38,19 +37,17 @@ func TestCreateUserUseCase_Execute(t *testing.T) {
 
 	t.Run("should return error when email already exists", func(t *testing.T) {
 		input := &dto.UserInput{
-			Name:     "Jane",
-			LastName: "Doe",
-			Email:    "jane.doe@example.com",
-			Phone:    "0987654321",
+			Name:        "Jane",
+			Email:       "jane.doe@example.com",
+			PhoneNumber: "0987654321",
 		}
 
 		mockRepo.EXPECT().GetUserByEmail(gomock.Any(), input.Email).Return(
 			&entity.User{
-				IDUser:   pkg.NewID(),
-				Name:     input.Name,
-				LastName: input.LastName,
-				Email:    input.Email,
-				Phone:    input.Phone,
+				ID:          pkg.NewID().String(),
+				Name:        input.Name,
+				Email:       input.Email,
+				PhoneNumber: input.PhoneNumber,
 			}, nil)
 
 		err := useCase.Execute(context.Background(), input)
@@ -61,10 +58,9 @@ func TestCreateUserUseCase_Execute(t *testing.T) {
 
 	t.Run("should return error when user creation fails", func(t *testing.T) {
 		input := &dto.UserInput{
-			Name:     "Mark",
-			LastName: "Smith",
-			Email:    "mark.smith@example.com",
-			Phone:    "1112223333",
+			Name:        "Mark",
+			Email:       "mark.smith@example.com",
+			PhoneNumber: "1112223333",
 		}
 
 		mockRepo.EXPECT().CreateUser(gomock.Any(), gomock.Any()).Return(errors.New("creation failed"))

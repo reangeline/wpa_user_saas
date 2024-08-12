@@ -1,7 +1,6 @@
 package http
 
 import (
-	"context"
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -30,18 +29,18 @@ func (sl *ServerLambda) ServerHttp() {
 	lambda.Start(sl.HandlerRequest)
 }
 
-func (sl *ServerLambda) HandlerRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (sl *ServerLambda) HandlerRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
 	router := chi.NewRouter()
 
 	route.InitializeMiddlewares(router)
 
-	iu, err := di.InitializeUser(sl.svc)
+	cwa, err := di.InitializeUser(sl.svc)
 	if err != nil {
 		log.Fatalf("failed to initialize user controller: %v", err)
 	}
 
-	route.InitializeUserRoutes(iu, router)
+	route.InitializeUserRoutes(cwa, router)
 
 	chiLambda = chiadapter.New(router)
 

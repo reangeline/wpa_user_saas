@@ -7,19 +7,17 @@ import (
 )
 
 type User struct {
-	ID       string `json:"id" dynamodbav:"id"`
-	Name     string `json:"name" dynamodbav:"name"`
-	LastName string `json:"last_name" dynamodbav:"last_name"`
-	Email    string `json:"email" dynamodbav:"email"`
-	Phone    string `json:"phone" dynamodbav:"phone"`
+	ID          string `json:"id" dynamodbav:"id"`
+	Name        string `json:"name" dynamodbav:"name"`
+	Email       string `json:"email" dynamodbav:"email"`
+	PhoneNumber string `json:"phone_number" dynamodbav:"phone_number"`
 }
 
-func NewUser(name, last_name, email, phone string) (*User, error) {
+func NewUser(name, email, phone_number string) (*User, error) {
 	user := &User{
-		Name:     name,
-		LastName: last_name,
-		Email:    email,
-		Phone:    phone,
+		Name:        name,
+		Email:       email,
+		PhoneNumber: phone_number,
 	}
 
 	user.AddId()
@@ -43,21 +41,17 @@ func (u *User) IsValid() error {
 		return errors.New("name is required")
 	}
 
-	if u.LastName == "" {
-		return errors.New("last name is required")
-	}
-
 	if u.Email == "" {
 		return errors.New("email is required")
 	}
 
-	if u.Phone == "" {
-		return errors.New("phone is required")
+	if u.PhoneNumber == "" {
+		return errors.New("phone_number is required")
 	}
 
-	// phoneRegex := regexp.MustCompile(`^\+[1-9]\d{1,14}$`)
-	// if !phoneRegex.MatchString(u.Phone) {
-	// 	return errors.New("phone is not a valid phone number")
+	// phone_numberRegex := regexp.MustCompile(`^\+[1-9]\d{1,14}$`)
+	// if !phone_numberRegex.MatchString(u.PhoneNumber) {
+	// 	return errors.New("phone_number is not a valid phone_number number")
 
 	// }
 

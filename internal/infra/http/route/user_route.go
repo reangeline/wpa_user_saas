@@ -1,20 +1,15 @@
 package route
 
 import (
-	"net/http"
-
 	"github.com/go-chi/chi/v5"
-	"github.com/reangeline/wpa_user_saas/internal/presentation/controller"
+	"github.com/reangeline/wpa_user_saas/internal/presentation/handler"
 )
 
-func InitializeUserRoutes(controller *controller.UserController, r chi.Router) {
+func InitializeUserRoutes(handler *handler.UserHanlder, r chi.Router) {
 
-	r.Route("/users", func(r chi.Router) {
-		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Create User"))
-		})
-
-		r.Post("/", controller.CreateUserRest)
+	r.Route("/user", func(r chi.Router) {
+		r.Post("/", handler.CreateUser)
+		r.Get("/", handler.GetUserByPhone)
 	})
 
 }

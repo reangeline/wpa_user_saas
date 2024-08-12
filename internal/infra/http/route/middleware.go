@@ -21,7 +21,4 @@ func InitializeMiddlewares(r chi.Router) {
 		MaxAge:           300,
 	}))
 
-	// swaggerUrl := fmt.Sprintf("http://0.0.0.0:%s/docs/doc.json", "8080")
-	// r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL(swaggerUrl)))
-
 }

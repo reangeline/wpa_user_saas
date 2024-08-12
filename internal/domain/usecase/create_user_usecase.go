@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	event "github.com/reangeline/wpa_user_saas/internal/domain/contract/event"
 	repository "github.com/reangeline/wpa_user_saas/internal/domain/contract/repository"
 	"github.com/reangeline/wpa_user_saas/internal/domain/entity"
 	"github.com/reangeline/wpa_user_saas/internal/dto"
@@ -12,16 +11,14 @@ import (
 
 type CreateUserUseCase struct {
 	userRepository repository.UserRepositoryInterface
-	snsService     event.SNSServiceInterface
 }
 
 func NewCreateUserUseCase(
 	userRepository repository.UserRepositoryInterface,
-	snsService event.SNSServiceInterface,
+
 ) *CreateUserUseCase {
 	return &CreateUserUseCase{
 		userRepository: userRepository,
-		snsService:     snsService,
 	}
 }
 
@@ -40,17 +37,12 @@ func (u *CreateUserUseCase) Execute(ctx context.Context, input *dto.UserInput) e
 	// 	return ErrEmailAlreadyExists
 	// }
 
-	user, err := entity.NewUser(input.Name, input.LastName, input.Email, input.Phone)
+	user, err := entity.NewUser(input.Name, input.Email, input.PhoneNumber)
 	if err != nil {
 		return err
 	}
 
 	if err := u.userRepository.CreateUser(ctx, user); err != nil {
-		return err
-	}
-
-	err = u.snsService.PublishMessage("user", "created_user")
-	if err != nil {
 		return err
 	}
 
