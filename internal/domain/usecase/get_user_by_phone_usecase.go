@@ -28,10 +28,10 @@ func (u *GetUserByPhoneUseCase) Execute(ctx context.Context, phone string) (*dto
 	}
 
 	return &dto.UserOutput{
-		Name:        user.Name,
-		Email:       user.Email,
-		PhoneNumber: user.PhoneNumber,
-		UserExist:   true,
+		Name:      user.Name,
+		Email:     user.Email,
+		Phone:     user.Phone,
+		UserExist: true,
 	}, nil
 
 }

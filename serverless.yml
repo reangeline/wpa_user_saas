@@ -22,14 +22,14 @@ provider:
 
 functions:
   getUser:
-    handler: bin/bootstrap
+    handler: bootstrap
     events:
       - http:
           path: /user/{phone}
           method: GET
 
   createUser:
-    handler: bin/bootstrap
+    handler: bootstrap
     events:
       - http:
           path: /user
@@ -39,7 +39,3 @@ functions:
 plugins:
   - serverless-step-functions
 
-package:
-  patterns:
-    - '!./**'
-    - ./bin/**

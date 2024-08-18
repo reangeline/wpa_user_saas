@@ -9,17 +9,17 @@ import (
 	"github.com/reangeline/wpa_user_saas/internal/di"
 	"github.com/reangeline/wpa_user_saas/internal/infra/http/route"
 
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	chiadapter "github.com/awslabs/aws-lambda-go-api-proxy/chi"
 )
 
 var chiLambda *chiadapter.ChiLambda
 
 type ServerLambda struct {
-	svc *dynamodb.DynamoDB
+	svc *dynamodb.Client
 }
 
-func NewServerLambda(svc *dynamodb.DynamoDB) *ServerLambda {
+func NewServerLambda(svc *dynamodb.Client) *ServerLambda {
 	return &ServerLambda{
 		svc,
 	}

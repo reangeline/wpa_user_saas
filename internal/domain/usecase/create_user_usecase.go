@@ -23,21 +23,21 @@ func NewCreateUserUseCase(
 }
 
 var (
-	ErrEmailAlreadyExists = errors.New("email already exist")
+	ErrPhoneAlreadyExists = errors.New("phone already exist")
 )
 
 func (u *CreateUserUseCase) Execute(ctx context.Context, input *dto.UserInput) error {
 
-	// userExist, err := u.userRepository.GetUserByEmail(ctx, input.Email)
+	// isExist, err := u.userRepository.GetUserByPhone(ctx, input.PhoneNumber)
 	// if err != nil {
 	// 	return err
 	// }
 
-	// if userExist != nil {
-	// 	return ErrEmailAlreadyExists
+	// if isExist != nil {
+	// 	return ErrPhoneAlreadyExists
 	// }
 
-	user, err := entity.NewUser(input.Name, input.Email, input.PhoneNumber)
+	user, err := entity.NewUser(input.Name, input.Email, input.Phone)
 	if err != nil {
 		return err
 	}

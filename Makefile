@@ -2,8 +2,8 @@
 
 build: clean
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -o bin/bootstrap cmd/lambda/main.go
-	cd bin && zip bootstrap.zip bootstrap
+	env GOARCH=amd64 GOOS=linux go build -o bootstrap cmd/lambda/main.go
+	zip bootstrap.zip bootstrap
 
 deploy_prod: build
 	serverless deploy --stage prod
@@ -13,7 +13,7 @@ dev:
 
 clean:
 	go clean
-	rm -rf ./bin
+	rm -rf bootstrap bootstrap.zip
 
 # deploy: clean build
 # 	sls deploy --verbose

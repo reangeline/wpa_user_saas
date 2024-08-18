@@ -1,18 +1,24 @@
 package main
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"context"
+	"log"
+
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/reangeline/wpa_user_saas/internal/infra/http"
+
+	"github.com/aws/aws-sdk-go-v2/config"
 )
 
 func main() {
 
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-1"))
+	if err != nil {
+		log.Fatalf("unable to load SDK config, %v", err)
+	}
 
-	svc := dynamodb.New(sess)
+	svc := dynamodb.NewFromConfig(cfg)
+
 	server := http.NewServerLambda(svc)
 
 	server.ServerHttp()

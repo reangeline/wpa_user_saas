@@ -7,17 +7,17 @@ import (
 )
 
 type User struct {
-	ID          string `json:"id" dynamodbav:"id"`
-	Name        string `json:"name" dynamodbav:"name"`
-	Email       string `json:"email" dynamodbav:"email"`
-	PhoneNumber string `json:"phone_number" dynamodbav:"phone_number"`
+	ID    string `json:"id" dynamodbav:"id"`
+	Name  string `json:"name" dynamodbav:"name"`
+	Email string `json:"email" dynamodbav:"email"`
+	Phone string `json:"phone" dynamodbav:"phone"`
 }
 
-func NewUser(name, email, phone_number string) (*User, error) {
+func NewUser(name, email, phone string) (*User, error) {
 	user := &User{
-		Name:        name,
-		Email:       email,
-		PhoneNumber: phone_number,
+		Name:  name,
+		Email: email,
+		Phone: phone,
 	}
 
 	user.AddId()
@@ -45,8 +45,8 @@ func (u *User) IsValid() error {
 		return errors.New("email is required")
 	}
 
-	if u.PhoneNumber == "" {
-		return errors.New("phone_number is required")
+	if u.Phone == "" {
+		return errors.New("phone is required")
 	}
 
 	// phone_numberRegex := regexp.MustCompile(`^\+[1-9]\d{1,14}$`)

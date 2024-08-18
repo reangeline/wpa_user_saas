@@ -9,7 +9,7 @@ func InitializeUserRoutes(handler *handler.UserHanlder, r chi.Router) {
 
 	r.Route("/user", func(r chi.Router) {
 		r.Post("/", handler.CreateUser)
-		r.Get("/", handler.GetUserByPhone)
+		r.Get("/{phone}", handler.GetUserByPhone)
 	})
 
 }

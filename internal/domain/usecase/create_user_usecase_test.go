@@ -25,9 +25,9 @@ func TestCreateUserUseCase_Execute(t *testing.T) {
 		mockRepo.EXPECT().GetUserByEmail(gomock.Any(), gomock.Any()).Return(nil, nil)
 
 		input := &dto.UserInput{
-			Name:        "John",
-			Email:       "john.doe@example.com",
-			PhoneNumber: "1234567890",
+			Name:  "John",
+			Email: "john.doe@example.com",
+			Phone: "1234567890",
 		}
 
 		err := useCase.Execute(context.Background(), input)
@@ -37,30 +37,30 @@ func TestCreateUserUseCase_Execute(t *testing.T) {
 
 	t.Run("should return error when email already exists", func(t *testing.T) {
 		input := &dto.UserInput{
-			Name:        "Jane",
-			Email:       "jane.doe@example.com",
-			PhoneNumber: "0987654321",
+			Name:  "Jane",
+			Email: "jane.doe@example.com",
+			Phone: "0987654321",
 		}
 
 		mockRepo.EXPECT().GetUserByEmail(gomock.Any(), input.Email).Return(
 			&entity.User{
-				ID:          pkg.NewID().String(),
-				Name:        input.Name,
-				Email:       input.Email,
-				PhoneNumber: input.PhoneNumber,
+				ID:    pkg.NewID().String(),
+				Name:  input.Name,
+				Email: input.Email,
+				Phone: input.Phone,
 			}, nil)
 
 		err := useCase.Execute(context.Background(), input)
 
 		assert.Error(t, err)
-		assert.Equal(t, ErrEmailAlreadyExists, err)
+		assert.Equal(t, ErrPhoneAlreadyExists, err)
 	})
 
 	t.Run("should return error when user creation fails", func(t *testing.T) {
 		input := &dto.UserInput{
-			Name:        "Mark",
-			Email:       "mark.smith@example.com",
-			PhoneNumber: "1112223333",
+			Name:  "Mark",
+			Email: "mark.smith@example.com",
+			Phone: "1112223333",
 		}
 
 		mockRepo.EXPECT().CreateUser(gomock.Any(), gomock.Any()).Return(errors.New("creation failed"))

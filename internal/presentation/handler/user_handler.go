@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/reangeline/wpa_user_saas/internal/domain/contract/usecase"
@@ -54,8 +55,16 @@ func (uh *UserHanlder) CreateUser(w http.ResponseWriter, r *http.Request) {
 func (uh *UserHanlder) GetUserByPhone(w http.ResponseWriter, r *http.Request) {
 	phone := r.URL.Query().Get("phone")
 
+	ctx := r.Context()
+	fmt.Println("phone", phone)
+	user, err := uh.getUserByPhoneUseCase.Execute(ctx, phone)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	w.WriteHeader(http.StatusBadRequest)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(phone)
+	json.NewEncoder(w).Encode(user)
 
 }
